@@ -1,0 +1,78 @@
+# ----------------------
+# Python
+# ----------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.venv/
+venv/
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ----------------------
+# Node / Frontend
+# ----------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+dist/
+build/
+
+# ----------------------
+# VSCode
+# ----------------------
+.vscode/
+.history/
+*.code-workspace
+
+# ----------------------
+# MacOS / Linux
+# ----------------------
+.DS_Store
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+
+# ----------------------
+# Vim / Temp files
+# ----------------------
+*.un~
+*.sublime-workspace
+*.sublime-project
+
+# ----------------------
+# Tmux / Session files
+# ----------------------
+.tmux-resurrect/
+.tmux/
+
+# ----------------------
+# Logs & Script temp
+# ----------------------
+*.log
+*.tmp
+*.cache
+
+# ----------------------
+# Docker
+# ----------------------
+docker-compose.override.yml
+.env.local
+
+# ----------------------
+# AWS / Terraform / Infra
+# ----------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.backup
+

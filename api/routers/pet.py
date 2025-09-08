@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from router.schemas import PetCreate
-from models.resources import Pet
+from models.resources import Pet, PetCreate
 from dependencies.db import pets
 import uuid
 
@@ -16,7 +15,6 @@ def create_pet(pet_in: PetCreate):
         species=pet_in.species,
         breed=pet_in.breed,
         owner_ids=pet_in.owner_ids,
-        dob=pet_in.dob
     )
     pets.append(pet)
     return pet
@@ -36,12 +34,12 @@ def get_pet(pet_id: str):
 
 # Update a pet
 @router.put("/{pet_id}", response_model=Pet)
-def update_pet(pet_id: str, updated_pet: Pet):
+def update_pet(pet_id: str, updated_pet: PetCreate):
     for i, pet in enumerate(pets):
         if pet.id == pet_id:
-            updated_pet.id = pet_id  # preserve ID
-            pets[i] = updated_pet
-            return updated_pet
+            updated_pet_with_id = updated_pet.model_copy(update={"id": pet_id})
+            pets[i] = updated_pet_with_id
+            return updated_pet_with_id
     raise HTTPException(status_code=404, detail="Pet not found")
 
 # Delete a pet

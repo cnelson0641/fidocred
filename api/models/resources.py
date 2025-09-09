@@ -12,6 +12,15 @@ class ExportEvent(BaseModel):
 #################
 # Main Models
 #################
+class User(BaseModel):
+    id: str
+    name: str
+    email: str
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+
 class Pet(BaseModel):
     id: str
     name: str

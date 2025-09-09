@@ -1,5 +1,23 @@
-from models.resources import Pet, User
+from models.resources import Pet, User, PetDocument
 from datetime import datetime
+
+# Dummy data to be replaced by a db
+petdocs_data = [
+    {
+        "id": "1",
+        "pet_id": "1",
+        "filename": "vaccine_record.pdf",
+        "filedata": "Sample data 1",
+    },
+    {
+        "id": "2",
+        "pet_id": "2",
+        "filename": "vet_visit_2023_10_01.pdf",
+        "filedata": "Sample data 2",
+    },
+]
+# Convert them all to PetDocument objects
+petdocs = [PetDocument(**pd) for pd in petdocs_data]
 
 # Dummy data to be replaced by a db
 users_data = [

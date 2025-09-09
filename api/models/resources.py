@@ -37,15 +37,13 @@ class PetCreate(BaseModel):
 class PetDocument(BaseModel):
     id: str
     pet_id: str
-    uploaded_by: str  # User.id
     filename: str
-    file_type: str = "pdf"
+    filedata: str
 
 class PetDocumentCreate(BaseModel):
     pet_id: str
-    uploaded_by: str  # User.id
     filename: str
-    file_type: str = "pdf"
+    filedata: str
 
 class PetHealthRecord(BaseModel):
     id: str

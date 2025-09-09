@@ -1,7 +1,23 @@
-from models.resources import Pet
+from models.resources import Pet, User
 from datetime import datetime
 
-# Fake in-memory "table"
+# Dummy data to be replaced by a db
+users_data = [
+    {
+        "id": "1",
+        "name": "Chris Nelson",
+        "email": "lol@lol.com",
+    },
+    {
+        "id": "2",
+        "name": "John Smith",
+        "email": "rofl@lol.com",
+    }
+]
+# Convert them all to Pet objects
+users = [User(**u) for u in users_data]
+
+# Dummy data to be replaced by a db
 pets_data = [
     {
         "id": "1",
@@ -25,7 +41,6 @@ pets_data = [
         "owner_ids": ["2"],
     },
 ]
-
 # Convert them all to Pet objects
 pets = [Pet(**p) for p in pets_data]
 

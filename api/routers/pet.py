@@ -6,19 +6,6 @@ import uuid
 
 router = APIRouter(prefix="/pets", tags=["pets"])
 
-# Create a new pet
-@router.post("/", response_model=Pet)
-def create_pet(pet_in: PetCreate):
-    pet = Pet(
-        id=str(uuid.uuid4()),  # server-generated
-        name=pet_in.name,
-        species=pet_in.species,
-        breed=pet_in.breed,
-        owner_ids=pet_in.owner_ids,
-    )
-    pets.append(pet)
-    return pet
-
 # Get all pets
 @router.get("/", response_model=List[Pet])
 def get_pets():
@@ -30,6 +17,19 @@ def get_pet(pet_id: str):
     pet = next((p for p in pets if p.id == pet_id), None)
     if not pet:
         raise HTTPException(status_code=404, detail="Pet not found")
+    return pet
+
+# Create a new pet
+@router.post("/", response_model=Pet)
+def create_pet(pet_in: PetCreate):
+    pet = Pet(
+        id=str(uuid.uuid4()),  # server-generated
+        name=pet_in.name,
+        species=pet_in.species,
+        breed=pet_in.breed,
+        owner_ids=pet_in.owner_ids,
+    )
+    pets.append(pet)
     return pet
 
 # Update a pet

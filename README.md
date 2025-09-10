@@ -2,6 +2,10 @@
 
 This is the FidoCred internal API. It can be run locally for development and testing with sample data.
 
+## Quick Note on Hosting
+
+All development (including CI/CD) is done through GitLab at https://gitlab.com/cnelson0641-group/fidocred and mirrored to GitHub at https://github.com/cnelson0641/fidocred .
+
 ## Run Locally
 
 Use the deploy script to start the API and install dependencies:

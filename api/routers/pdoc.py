@@ -34,16 +34,6 @@ def create_pet_document(pdoc_in: PetDocumentCreate):
     petdocs.append(pdoc)
     return pdoc
 
-# Update a pet document
-@router.put("/{pdoc_id}", response_model=PetDocument)
-def update_pet_document(pdoc_id: str, updated_pdoc: PetDocumentCreate):
-    for i, pdoc in enumerate(petdocs):
-        if pdoc.id == pdoc_id:
-            updated_pdoc_with_id = updated_pdoc.model_copy(update={"id": pdoc_id})
-            petdocs[i] = updated_pdoc_with_id
-            return updated_pdoc_with_id
-    raise HTTPException(status_code=404, detail="PetDocument not found")
-
 # Delete a pet document
 @router.delete("/{pdoc_id}")
 def delete_pet_document(pdoc_id: str):

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import user, pet, pdoc, phr
+from routers import user, pet, pdoc, phr, pr, pt
 
 app = FastAPI(title="FidoCred Internal API")
 
@@ -7,6 +7,8 @@ app.include_router(user.router)
 app.include_router(pet.router)
 app.include_router(pdoc.router)
 app.include_router(phr.router)
+app.include_router(pr.router)
+app.include_router(pt.router)
 
 @app.get("/")
 def root():

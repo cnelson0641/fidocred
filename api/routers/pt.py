@@ -28,6 +28,17 @@ def delete_pet_timeline(pt_id: str):
             return {"detail": "PetTimeline deleted"}
     raise HTTPException(status_code=404, detail="PetTimeline not found")
 
+# Create a pet timeline
+@router.post("/", response_model=PetTimeline)
+def create_pet_timeline(pt_in: PetTimelineCreate):
+    pt = PetTimeline(
+        id=str(uuid.uuid4()),
+        summary=pt_in.summary,
+        report_ids=pt_in.report_ids,
+    )
+    pts.append(pt)
+    return pt
+
 # Update a pet timeline
 @router.put("/{pt_id}", response_model=PetTimeline)
 def update_pet_timeline(pt_id: str, updated_pt: PetTimelineCreate):

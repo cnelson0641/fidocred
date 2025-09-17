@@ -36,6 +36,11 @@ The API loads sample users, pets, and documents from the `sample_data/` folder f
 TODO
 pytest tests/
 
+## CI/CD
+
+TODO
+Everything is tightly integrated with source control, and deployment will be managed through GitLab CI/CD, with as much as possible stored in source control here.
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.

@@ -5,7 +5,6 @@ variable "aws_region" {
 }
 
 variable "env_name" {
-  description = "Dev or PROD environment."
+  description = "PROD or test environment."
   type        = string
-  default     = "local"
 }

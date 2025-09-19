@@ -1,4 +1,11 @@
 # ----------------------
+# Deployment artifacts
+# ----------------------
+lambda.zip
+
+
+# COPY PASTED CODE BELOW ##############
+# ----------------------
 # Python
 # ----------------------
 __pycache__/

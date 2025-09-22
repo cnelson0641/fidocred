@@ -11,7 +11,7 @@
     script:
         - echo "HELLO"
         - terraform init -backend-config="path=backend-${ENV}.tfstate"
-        - terraform plan -out="${ENV}.tfplan" -var-file=${ENV}.tfvars
+        - terraform plan -out="${ENV}.tfplan"
     artifacts:
         paths:
             - "${ENV}.tfplan"

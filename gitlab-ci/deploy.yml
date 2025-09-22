@@ -1,5 +1,6 @@
 .plan_template:
     stage: plan
+    image: hashicorp/terraform
     environment:
         name: $ENV
     before_script:
@@ -14,6 +15,7 @@
 
 .apply_template:
     stage: apply
+    image: hashicorp/terraform
     environment:
         name: $ENV
     script:

@@ -5,6 +5,11 @@
         - if: '$CI_COMMIT_BRANCH != "main"'
           when: always
 
+validate_dev:
+    extends:
+        - .dev_template
+        - .validate_template
+
 plan_dev:
     extends:
         - .dev_template

@@ -1,3 +1,15 @@
+.validate_template:
+    stage: validate
+    image:
+        name: hashicorp/terraform:1.6.0
+        entrypoint: [""]
+    environment:
+        name: $ENV
+    script:
+        - cd infra
+        - terraform init -backend=false
+        - terraform validate
+
 .plan_template:
     stage: plan
     image:
@@ -5,13 +17,9 @@
         entrypoint: [""]
     environment:
         name: $ENV
-    before_script:
-        - pwd
-        - ls -al
-        - terraform --version
     script:
         - cd infra
-        - terraform init
+        - terraform init -backend-config="backend-${ENV}.tf"
         - terraform plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
     artifacts:
         paths:
@@ -27,4 +35,5 @@
         name: $ENV
     script:
         - cd infra
+        - terraform init -backend-config="backend-${ENV}.tf"
         - terraform apply "${ENV}.tfplan"

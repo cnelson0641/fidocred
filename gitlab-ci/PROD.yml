@@ -10,10 +10,10 @@ plan_PROD:
         - .PROD_template
         - .plan_template
 
-deploy_PROD:
+apply_PROD:
     extends:
         - .PROD_template
-        - .deploy_template
+        - .apply_template
     script:
         - echo "Production releases not supported yet."
         - exit 1

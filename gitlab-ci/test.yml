@@ -10,7 +10,7 @@ plan_test:
         - .test_template
         - .plan_template
 
-deploy_test:
+apply_test:
     extends:
         - .test_template
-        - .deploy_template
+        - .apply_template

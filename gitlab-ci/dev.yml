@@ -10,8 +10,8 @@ plan_dev:
         - .dev_template
         - .plan_template
 
-deploy_dev:
+apply_dev:
     extends:
         - .dev_template
-        - .deploy_template
+        - .apply_template
     when: manual

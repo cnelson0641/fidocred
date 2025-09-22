@@ -6,10 +6,11 @@
     environment:
         name: $ENV
     before_script:
-        - echo "HELLO"
+        - pwd
+        - ls -al
         - terraform --version
     script:
-        - echo "HELLO"
+        - cd infra
         - terraform init -backend-config="path=backend-${ENV}.tfstate"
         - terraform plan -out="${ENV}.tfplan"
     artifacts:
@@ -19,9 +20,11 @@
 
 .apply_template:
     stage: apply
-    image: hashicorp/terraform:1.6.0
+    image:
+        name: hashicorp/terraform:1.6.0
+        entrypoint: [""]
     environment:
         name: $ENV
     script:
-        - echo "HELLO"
+        - cd infra
         - terraform apply "${ENV}.tfplan"

@@ -1,0 +1,20 @@
+.plan_template:
+    stage: plan
+    environment:
+        name: $ENV
+    before_script:
+        - terraform --version
+    script:
+        - terraform init -backend-config="path=backend-${ENV}.tfstate"
+        - terraform plan -out="${ENV}.tfplan" -var-file=${ENV}.tfvars
+    artifacts:
+        paths:
+            - "${ENV}.tfplan"
+        expire_in: 6 hours
+
+.apply_template:
+    stage: apply
+    environment:
+        name: $ENV
+    script:
+        - terraform apply "${ENV}.tfplan"

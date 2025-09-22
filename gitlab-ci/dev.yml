@@ -1,0 +1,17 @@
+.dev_template:
+    variables:
+        ENV: dev
+    rules:
+        - if: '$CI_COMMIT_BRANCH != "main"'
+          when: always
+
+plan_dev:
+    extends:
+        - .dev_template
+        - .plan_template
+
+deploy_dev:
+    extends:
+        - .dev_template
+        - .deploy_template
+    when: manual

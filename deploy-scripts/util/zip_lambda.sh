@@ -2,7 +2,7 @@
 set -eux
 
 # Move to repo root
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 echo "Cleaning old lambda package..."
 rm -f lambda.zip
@@ -17,7 +17,7 @@ cp -r api/* package/
 
 echo "Creating lambda.zip..."
 cd package
-zip -r ../lambda.zip . > /dev/null
+zip -r ../../lambda.zip . > /dev/null
 cd ..
 
 echo "Cleaning up..."

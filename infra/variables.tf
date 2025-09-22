@@ -8,3 +8,11 @@ variable "env_name" {
   description = "Dev, test, or PROD environment."
   type        = string
 }
+
+variable "aws_access_key" {
+      type = string
+}
+
+variable "aws_secret_key" {
+      type = string
+}

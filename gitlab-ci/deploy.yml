@@ -11,8 +11,8 @@
         - terraform --version
     script:
         - cd infra
-        - terraform init -backend-config="path=backend-${ENV}.tfstate"
-        - terraform plan -out="${ENV}.tfplan -var="env_name=${ENV}"
+        - terraform init
+        - terraform plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
     artifacts:
         paths:
             - "${ENV}.tfplan"

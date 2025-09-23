@@ -1,7 +1,7 @@
 .validate_template:
     stage: validate
     image:
-        name: oowy/opentofu:1.10.6-alpine3.20
+        name: oowy/opentofu:1.9.1-alpine3.20
         entrypoint: [""]
     environment:
         name: $ENV
@@ -13,7 +13,7 @@
 .plan_template:
     stage: plan
     image:
-        name: oowy/opentofu:1.10.6-alpine3.20
+        name: oowy/opentofu:1.9.1-alpine3.20
         entrypoint: [""]
     environment:
         name: $ENV
@@ -29,7 +29,7 @@
 .apply_template:
     stage: apply
     image:
-        name: oowy/opentofu:1.10.6-alpine3.20
+        name: oowy/opentofu:1.9.1-alpine3.20
         entrypoint: [""]
     environment:
         name: $ENV

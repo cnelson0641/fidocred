@@ -5,7 +5,6 @@
         entrypoint: [""]
     environment:
         name: $ENV
-    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend=false
@@ -18,7 +17,6 @@
         entrypoint: [""]
     environment:
         name: $ENV
-    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend-config="backend-${ENV}.tf"
@@ -35,7 +33,6 @@
         entrypoint: [""]
     environment:
         name: $ENV
-    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend-config="backend-${ENV}.tf"

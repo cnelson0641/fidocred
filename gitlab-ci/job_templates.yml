@@ -2,7 +2,6 @@
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-        entrypoint: [""]
     environment:
         name: $ENV
     script:
@@ -14,7 +13,6 @@
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-        entrypoint: [""]
     environment:
         name: $ENV
     script:
@@ -30,7 +28,6 @@
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-        entrypoint: [""]
     environment:
         name: $ENV
     script:

@@ -6,8 +6,8 @@
         name: $ENV
     script:
         - cd infra
-        - opentofu init -backend=false
-        - opentofu validate
+        - tofu init -backend=false
+        - tofu validate
 
 .plan_template:
     stage: plan
@@ -17,8 +17,8 @@
         name: $ENV
     script:
         - cd infra
-        - opentofu init -backend-config="backend-${ENV}.tf"
-        - opentofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
+        - tofu init -backend-config="backend-${ENV}.tf"
+        - tofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
     artifacts:
         paths:
             - "${ENV}.tfplan"
@@ -32,5 +32,5 @@
         name: $ENV
     script:
         - cd infra
-        - opentofu init -backend-config="backend-${ENV}.tf"
-        - opentofu apply "${ENV}.tfplan"
+        - tofu init -backend-config="backend-${ENV}.tf"
+        - tofu apply "${ENV}.tfplan"

@@ -6,7 +6,7 @@
         name: $ENV
     script:
         - cd infra
-        - tofu init -backend=false
+        - tofu init -backend-config="backend-${ENV}.tf"
         - tofu validate
 
 .plan_template:

@@ -1,26 +1,26 @@
 .validate_template:
     stage: validate
     image:
-        name: hashicorp/terraform:1.6.0
+        name: opentofu/opentofu:1.9.5
         entrypoint: [""]
     environment:
         name: $ENV
     script:
         - cd infra
-        - terraform init -backend=false
-        - terraform validate
+        - opentofu init -backend=false
+        - opentofu validate
 
 .plan_template:
     stage: plan
     image:
-        name: hashicorp/terraform:1.6.0
+        name: opentofu/opentofu:1.9.5
         entrypoint: [""]
     environment:
         name: $ENV
     script:
         - cd infra
-        - terraform init -backend-config="backend-${ENV}.tf"
-        - terraform plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
+        - opentofu init -backend-config="backend-${ENV}.tf"
+        - opentofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
     artifacts:
         paths:
             - "${ENV}.tfplan"
@@ -29,11 +29,11 @@
 .apply_template:
     stage: apply
     image:
-        name: hashicorp/terraform:1.6.0
+        name: opentofu/opentofu:1.9.5
         entrypoint: [""]
     environment:
         name: $ENV
     script:
         - cd infra
-        - terraform init -backend-config="backend-${ENV}.tf"
-        - terraform apply "${ENV}.tfplan"
+        - opentofu init -backend-config="backend-${ENV}.tf"
+        - opentofu apply "${ENV}.tfplan"

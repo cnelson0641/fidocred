@@ -1,0 +1,17 @@
+stages:
+    - validate
+    - plan
+    - apply
+
+include:
+    - local: 'gitlab-ci/deploy.yml'
+    - local: 'gitlab-ci/dev.yml'
+    - local: 'gitlab-ci/test.yml'
+    - local: 'gitlab-ci/PROD.yml'
+
+variables:
+	OT_BACKEND_CONFIG: |
+        backend "gitlab" {
+            project = "FidoCred/fidocred-api"
+            environment = "$CI_ENVIRONMENT_NAME"
+        }

@@ -4,7 +4,7 @@ stages:
     - apply
 
 include:
-    - local: 'gitlab-ci/deploy.yml'
+    - local: 'gitlab-ci/job_templates.yml'
     - local: 'gitlab-ci/dev.yml'
     - local: 'gitlab-ci/test.yml'
     - local: 'gitlab-ci/PROD.yml'

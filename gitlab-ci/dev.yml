@@ -11,7 +11,7 @@ validate_dev:
         - .validate_template
 
 fail_pipeline_on_failure_validate_dev:
-    <<: *fail_pipeline_on_failure
+    extends: fail_pipeline_on_failure
     stage: validate
 
 plan_dev:
@@ -19,17 +19,8 @@ plan_dev:
         - .dev_template
         - .plan_template
 
-fail_pipeline_on_failure_plan_dev:
-    <<: *fail_pipeline_on_failure
-    stage: plan
-
 apply_dev:
     extends:
         - .dev_template
         - .apply_template
     when: manual
-
-fail_pipeline_on_failure_apply_dev:
-    <<: *fail_pipeline_on_failure
-    stage: apply
-

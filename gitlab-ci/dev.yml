@@ -10,10 +10,6 @@ validate_dev:
         - .dev_template
         - .validate_template
 
-fail_pipeline_on_failure_validate_dev:
-    extends: .fail_pipeline_on_failure
-    stage: validate
-
 plan_dev:
     extends:
         - .dev_template

@@ -5,6 +5,7 @@
         entrypoint: [""]
     environment:
         name: $ENV
+    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend=false
@@ -17,6 +18,7 @@
         entrypoint: [""]
     environment:
         name: $ENV
+    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend-config="backend-${ENV}.tf"
@@ -33,18 +35,8 @@
         entrypoint: [""]
     environment:
         name: $ENV
+    allow_failure: false
     script:
         - cd infra
         - opentofu init -backend-config="backend-${ENV}.tf"
         - opentofu apply "${ENV}.tfplan"
-
-.fail_pipeline_on_failure:
-  script:
-    - |
-      if [[ "$CI_JOB_STATUS" == "failed" ]]; then
-        echo "Previous stage failed – stopping pipeline"
-        exit 1
-      fi
-  allow_failure: false
-  when: always
-  stage: will_be_overwritten

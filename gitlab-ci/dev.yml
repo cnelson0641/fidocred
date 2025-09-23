@@ -3,7 +3,6 @@
         ENV: dev
     rules:
         - if: '$CI_COMMIT_BRANCH != "main"'
-          when: always
 
 validate_dev:
     extends:

@@ -3,7 +3,6 @@
         ENV: test
     rules:
         - if: '$CI_COMMIT_BRANCH == "main"'
-          when: always
 
 validate_test:
     extends:

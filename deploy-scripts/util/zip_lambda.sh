@@ -1,27 +1,29 @@
 #!/bin/bash
 set -eux
 
-# Move to repo root
-cd "$(dirname "$0")/../.."
+# Define the absolute path to the repo root
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+echo "Repo root: $REPO_ROOT"
 
 echo "Cleaning old lambda package..."
-rm -f lambda.zip
-rm -rf package/
+rm -f "$REPO_ROOT/lambda.zip"
+rm -rf "$REPO_ROOT/package/"
 
-echo "Installing dependencies..."
-# Install Python dependencies into a temporary folder
-pip install -r api/requirements.txt -t package/
+echo "Installing dependencies in Lambda-compatible Docker..."
+docker run --rm -v "$REPO_ROOT":/var/task python:3.11-bullseye bash -c "
+    pip install --upgrade pip
+    pip install -r /var/task/api/requirements.txt -t /var/task/package
+"
 
 echo "Copying application code..."
-cp -r api/* package/
+cp -r "$REPO_ROOT/api/"* "$REPO_ROOT/package/"
 
 echo "Creating lambda.zip..."
-cd package
-zip -r ../../lambda.zip . > /dev/null
-cd ..
+cd "$REPO_ROOT/package"
+zip -r "$REPO_ROOT/lambda.zip" . > /dev/null
+cd "$REPO_ROOT"
 
 echo "Cleaning up..."
-rm -rf package/
+rm -rf "$REPO_ROOT/package/"
 
-echo "Lambda package created: lambda.zip"
-
+echo "Lambda package created: $REPO_ROOT/lambda.zip"

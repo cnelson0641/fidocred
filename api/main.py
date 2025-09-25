@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from mangum import Mangum
 from routers import user, pet, pdoc, phr, pr, pt
 
 app = FastAPI(title="FidoCred Internal API")
@@ -13,3 +14,6 @@ app.include_router(pt.router)
 @app.get("/")
 def root():
     return {"message": "FidoCred Internal API Up and Running!!"}
+
+
+handler = Mangum(app)

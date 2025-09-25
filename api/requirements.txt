@@ -1,2 +1,4 @@
-fastapi
-uvicorn
+fastapi>=0.101
+mangum>=0.17
+pydantic>=2.0
+uvicorn[standard]>=0.23

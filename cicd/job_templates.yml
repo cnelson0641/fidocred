@@ -5,9 +5,15 @@
     environment:
         name: $ENV
     script:
+        - ./util/zip_lambda.sh
         - cd infra
         - tofu init
         - tofu validate
+    artifacts:
+        paths:
+            - artifacts/lambda.zip
+        expire_in: 1h   # keep it short, just for pipeline
+
 
 .plan_template:
     stage: plan
@@ -16,7 +22,6 @@
     environment:
         name: $ENV
     script:
-        - ./util/zip_lambda.sh
         - cd infra
         - tofu init
         - tofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"

@@ -16,6 +16,7 @@
     environment:
         name: $ENV
     script:
+        - ./util/zip_lambda.sh
         - cd infra
         - tofu init
         - tofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"

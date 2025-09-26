@@ -4,10 +4,10 @@ stages:
     - apply
 
 include:
-    - local: 'gitlab-ci/job_templates.yml'
-    - local: 'gitlab-ci/dev.yml'
-    - local: 'gitlab-ci/test.yml'
-    - local: 'gitlab-ci/PROD.yml'
+    - local: 'cicd/job_templates.yml'
+    - local: 'cicd/dev.yml'
+    - local: 'cicd/test.yml'
+    - local: 'cicd/PROD.yml'
 
 variables:
     OT_BACKEND_CONFIG: |

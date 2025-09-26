@@ -4,6 +4,11 @@
     rules:
         - if: '$CI_COMMIT_BRANCH != "main"'
 
+build_dev:
+    extends:
+        - .dev_template
+        - .build_template
+
 validate_dev:
     extends:
         - .dev_template

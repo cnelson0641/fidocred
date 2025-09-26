@@ -1,3 +1,13 @@
+.build_template:
+    stage: build
+    image: bash:latest
+    script:
+        - bash util/zip_lambda.sh
+    artifacts:
+        paths:
+            - artifacts/lambda.zip
+        expire_in: 1h
+
 .validate_template:
     stage: validate
     image:
@@ -5,7 +15,6 @@
     environment:
         name: $ENV
     script:
-        - bash util/zip_lambda.sh
         - cd infra
         - tofu init
         - tofu validate

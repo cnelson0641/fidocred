@@ -5,7 +5,7 @@
     environment:
         name: $ENV
     script:
-        - ./util/zip_lambda.sh
+        - bash util/zip_lambda.sh
         - cd infra
         - tofu init
         - tofu validate

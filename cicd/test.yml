@@ -1,6 +1,8 @@
 .test_template:
+    environment:
+        name: test
     variables:
-        ENV: test
+        GITLAB_ENV: test
     rules:
         - if: '$CI_COMMIT_BRANCH == "main"'
 

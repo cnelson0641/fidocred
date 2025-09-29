@@ -20,8 +20,6 @@
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-    environment:
-        name: $ENV
     script:
         - cd infra
         - tofu init
@@ -36,8 +34,6 @@
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-    environment:
-        name: $ENV
     script:
         - cd infra
         - tofu init
@@ -51,8 +47,6 @@
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
-    environment:
-        name: $ENV
     script:
         - cd infra
         - tofu init

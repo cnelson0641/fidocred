@@ -1,6 +1,8 @@
 .PROD_template:
+    environment:
+        name: PROD
     variables:
-        ENV: PROD
+        GITLAB_ENV: PROD
     rules:
         - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG'
 

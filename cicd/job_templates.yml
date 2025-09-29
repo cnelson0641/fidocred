@@ -40,10 +40,10 @@
     script:
         - cd infra
         - tofu init
-        - tofu plan -out="${gitlab_env}.tfplan" -var="gitlab_env=${gitlab_env}"
+        - tofu plan -out="../artifacts/${gitlab_env}.tfplan" -var="gitlab_env=${gitlab_env}"
     artifacts:
         paths:
-            - "infra/${gitlab_env}.tfplan"
+            - "artifacts/${gitlab_env}.tfplan"
         expire_in: 6 hours
 
 .apply_template:
@@ -53,4 +53,4 @@
     script:
         - cd infra
         - tofu init
-        - tofu apply "${gitlab_env}.tfplan"
+        - tofu apply "artifacts/${gitlab_env}.tfplan"

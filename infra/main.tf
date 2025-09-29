@@ -23,7 +23,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
 	handler = "main.handler"
 	runtime = "python3.11"
 	role = aws_iam_role.lambda_role.arn
-	filename = "${path.module}/../lambda.zip"
+	filename = "${path.module}/../artifacts/lambda.zip"
 	source_code_hash = filebase64sha256("${path.module}/../artifacts/lambda.zip")
 }
 

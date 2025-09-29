@@ -9,6 +9,7 @@
     before_script:
         - '[ -z "$AWS_ACCESS_KEY_ID" ] && echo "Missing AWS_ACCESS_KEY_ID" && exit 1'
         - '[ -z "$AWS_SECRET_ACCESS_KEY" ] && echo "Missing AWS_SECRET_ACCESS_KEY" && exit 1'
+        - '[ -z "$AWS_REGION" ] && echo "Missing AWS_REGION" && exit 1'
         - apk add --no-cache bash zip
     script:
         - bash util/zip_lambda.sh

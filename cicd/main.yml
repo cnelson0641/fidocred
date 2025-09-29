@@ -16,3 +16,4 @@ variables:
             project = "FidoCred/fidocred-api"
             environment = "$CI_ENVIRONMENT_NAME"
         }
+    gitlab_env: "$CI_ENVIRONMENT_NAME"

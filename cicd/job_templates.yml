@@ -29,7 +29,7 @@
     artifacts:
         paths:
             - artifacts/lambda.zip
-        expire_in: 1h   # keep it short, just for pipeline
+        expire_in: 1h
 
 
 .plan_template:
@@ -39,10 +39,10 @@
     script:
         - cd infra
         - tofu init
-        - tofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"
+        - tofu plan -out="${gitlab_env}.tfplan" -var="gitlab_env=${gitlab_env}"
     artifacts:
         paths:
-            - "${ENV}.tfplan"
+            - "${gitlab_env}.tfplan"
         expire_in: 6 hours
 
 .apply_template:

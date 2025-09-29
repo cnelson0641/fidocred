@@ -53,4 +53,5 @@
     script:
         - cd infra
         - tofu init
+		- tofu destroy "../artifacts/${gitlab_env}.tfplan"
         - tofu apply "../artifacts/${gitlab_env}.tfplan"

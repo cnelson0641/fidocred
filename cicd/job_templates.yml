@@ -7,8 +7,9 @@
         DOCKER_HOST: tcp://docker:2375/
         DOCKER_TLS_CERTDIR: ""
     before_script:
+        - '[ -z "$AWS_ACCESS_KEY_ID" ] && echo "Missing AWS_ACCESS_KEY_ID" && exit 1'
+        - '[ -z "$AWS_SECRET_ACCESS_KEY" ] && echo "Missing AWS_SECRET_ACCESS_KEY" && exit 1'
         - apk add --no-cache bash zip
-        - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
     script:
         - bash util/zip_lambda.sh
     artifacts:

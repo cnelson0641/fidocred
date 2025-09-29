@@ -53,5 +53,5 @@
     script:
         - cd infra
         - tofu init
-        - tofu destroy -auto-approve
+        - tofu destroy -var="gitlab_env=${gitlab_env}" -auto-approve
         - tofu apply "../artifacts/${gitlab_env}.tfplan"

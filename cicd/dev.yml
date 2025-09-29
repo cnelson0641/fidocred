@@ -25,4 +25,3 @@ apply_dev:
     extends:
         - .dev_template
         - .apply_template
-    when: manual

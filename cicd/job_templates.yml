@@ -10,6 +10,7 @@
         - '[ -z "$AWS_ACCESS_KEY_ID" ] && echo "Missing AWS_ACCESS_KEY_ID" && exit 1'
         - '[ -z "$AWS_SECRET_ACCESS_KEY" ] && echo "Missing AWS_SECRET_ACCESS_KEY" && exit 1'
         - '[ -z "$AWS_REGION" ] && echo "Missing AWS_REGION" && exit 1'
+        - '[ -z "$gitlab_env" ] && echo "Missing gitlab_env" && exit 1'
         - apk add --no-cache bash zip
     script:
         - bash util/zip_lambda.sh
@@ -52,4 +53,4 @@
     script:
         - cd infra
         - tofu init
-        - tofu apply "${ENV}.tfplan"
+        - tofu apply "${gitlab_env}.tfplan"

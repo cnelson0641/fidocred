@@ -8,6 +8,7 @@
         DOCKER_TLS_CERTDIR: ""
     before_script:
         - apk add --no-cache bash zip
+        - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
     script:
         - bash util/zip_lambda.sh
     artifacts:
@@ -38,7 +39,6 @@
     environment:
         name: $ENV
     script:
-        - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
         - cd infra
         - tofu init
         - tofu plan -out="${ENV}.tfplan" -var="env_name=${ENV}"

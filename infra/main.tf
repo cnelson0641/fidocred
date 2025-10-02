@@ -1,6 +1,6 @@
 # Lambda IAM Role
 resource "aws_iam_role" "lambda_role" {
-    name = "${var.gitlab_env}-lambda-role"
+    name = "fidocred-${var.gitlab_env}-lambda-role"
 
     assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
-	function_name = var.gitlab_env
+	function_name = "fidocred-${var.gitlab_env}-lambdafunc"
 	handler = "main.handler"
 	runtime = "python3.11"
 	role = aws_iam_role.lambda_role.arn
@@ -29,7 +29,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
 
 # API Gateway
 resource "aws_apigatewayv2_api" "http_api" {
-	name = var.gitlab_env
+	name = "fidocred-${var.gitlab_env}-apigateway"
 	protocol_type = "HTTP"
 }
 
@@ -48,7 +48,7 @@ resource "aws_apigatewayv2_route" "default_route" {
 
 resource "aws_apigatewayv2_stage" "stage" {
   api_id      = aws_apigatewayv2_api.http_api.id
-  name        = var.gitlab_env
+  name = "fidocred-${var.gitlab_env}-apigatewaystage"
   auto_deploy = true
 }
 

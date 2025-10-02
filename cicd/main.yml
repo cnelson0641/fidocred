@@ -11,9 +11,4 @@ include:
     - local: 'cicd/PROD.yml'
 
 variables:
-    OT_BACKEND_CONFIG: |
-        backend "gitlab" {
-            project = "FidoCred/fidocred-api"
-            environment = "$CI_ENVIRONMENT_NAME"
-        }
     gitlab_env: "$CI_ENVIRONMENT_NAME"

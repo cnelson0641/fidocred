@@ -39,7 +39,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra
-        - tofu init -backend-config="$OT_BACKEND_CONFIG"
+        - echo ${OT_BACKEND_CONFIG}
+        - tofu init -backend-config="${OT_BACKEND_CONFIG}"
         - tofu plan -out="../artifacts/${gitlab_env}.tfplan" -var="gitlab_env=${gitlab_env}"
     artifacts:
         paths:

@@ -52,18 +52,18 @@ resource "aws_apigatewayv2_route" "empty_route" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-resource "aws_apigatewayv2_stage" "stage" {
-  api_id = aws_apigatewayv2_api.http_api.id
-  name   = "stage" # same for all envs, because we need to strip out the stage in the Mangum handler
-  deployment_id = aws_apigatewayv2_deployment.deployment.id
-}
-
 resource "aws_apigatewayv2_deployment" "deployment" {
   api_id = aws_apigatewayv2_api.http_api.id
   depends_on = [
     aws_apigatewayv2_route.default_route,
     aws_apigatewayv2_route.empty_route
   ]
+}
+
+resource "aws_apigatewayv2_stage" "stage" {
+  api_id = aws_apigatewayv2_api.http_api.id
+  name   = "$default"
+  deployment_id = aws_apigatewayv2_deployment.deployment.id
 }
 
 # Lambda permissions

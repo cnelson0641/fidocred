@@ -2,9 +2,6 @@ from fastapi import FastAPI
 from mangum import Mangum
 from routers import user, pet, pdoc, phr, pr, pt
 
-# Stage name of API Gateway, defined in main.tf
-STAGE_NAME = "stage"
-
 app = FastAPI(title="FidoCred Internal API")
 
 app.include_router(user.router)
@@ -24,4 +21,4 @@ def catch_all(full_path: str):
     raise HTTPException(status_code=404, detail=f"Endpoint /{full_path} not found")
 
 
-handler = Mangum(app, api_gateway_base_path=STAGE_NAME)
+handler = Mangum(app)

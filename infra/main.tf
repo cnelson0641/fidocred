@@ -44,12 +44,14 @@ resource "aws_apigatewayv2_route" "default_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+  auto_deploy = true
 }
 
 resource "aws_apigatewayv2_route" "empty_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+  auto_deploy = true
 }
 
 resource "aws_apigatewayv2_stage" "stage" {

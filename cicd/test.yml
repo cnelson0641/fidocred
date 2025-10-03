@@ -1,10 +1,13 @@
 .test_template:
     environment:
         name: test
-    variables:
-        GITLAB_ENV: test
     rules:
         - if: '$CI_COMMIT_BRANCH == "main"'
+
+build_test:
+    extends:
+        - .test_template
+        - .build_template
 
 validate_test:
     extends:

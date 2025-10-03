@@ -1,10 +1,13 @@
 .PROD_template:
     environment:
         name: PROD
-    variables:
-        GITLAB_ENV: PROD
     rules:
         - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG'
+
+build_PROD:
+    extends:
+        - .PROD_template
+        - .build_template
 
 validate_PROD:
     extends:

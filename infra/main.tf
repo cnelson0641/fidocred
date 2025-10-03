@@ -48,7 +48,7 @@ resource "aws_apigatewayv2_route" "default_route" {
 
 resource "aws_apigatewayv2_stage" "stage" {
   api_id      = aws_apigatewayv2_api.http_api.id
-  name = "fidocred-${var.gitlab_env}-apigatewaystage"
+  name = "stage"  # same for all envs, because we need to strip out the stage in the Mangum handler
   auto_deploy = true
 }
 

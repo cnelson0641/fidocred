@@ -1,0 +1,27 @@
+.dev_template:
+    environment:
+        name: dev
+    variables:
+        GITLAB_ENV: dev
+    rules:
+        - if: '$CI_COMMIT_BRANCH != "main"'
+
+build_dev:
+    extends:
+        - .dev_template
+        - .build_template
+
+validate_dev:
+    extends:
+        - .dev_template
+        - .validate_template
+
+plan_dev:
+    extends:
+        - .dev_template
+        - .plan_template
+
+apply_dev:
+    extends:
+        - .dev_template
+        - .apply_template

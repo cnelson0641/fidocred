@@ -1,8 +1,12 @@
 # FidoCred API
 
-This is the FidoCred internal API. It can be run locally for development and testing with sample data.
+This is the FidoCred internal API, deployed to AWS, and available at the following API endpoints (Swagger UI docs linked):
 
-## Quick Note on Hosting
+1. Dev:  TODO
+2. Test: TODO
+3. PROD: TODO
+
+## Quick Note on Source Code
 
 All development (including CI/CD) is done through GitLab at https://gitlab.com/cnelson0641-group/fidocred and mirrored to GitHub at https://github.com/cnelson0641/fidocred .
 

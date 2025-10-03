@@ -1,0 +1,21 @@
+stages:
+    - build
+    - validate
+    - plan
+    - apply
+
+include:
+    - local: 'cicd/job_templates.yml'
+    - local: 'cicd/dev.yml'
+    - local: 'cicd/test.yml'
+    - local: 'cicd/PROD.yml'
+
+variables:
+    gitlab_env: "$CI_ENVIRONMENT_NAME"
+    TF_BACKEND_CONFIG: >
+        -backend-config=bucket=fidocred-${gitlab_env}-tfstate
+        -backend-config=key=terraform.tfstate
+        -backend-config=region=us-east-1
+        -backend-config=dynamodb_table=fidocred-${gitlab_env}-locks
+        -backend-config=encrypt=true
+

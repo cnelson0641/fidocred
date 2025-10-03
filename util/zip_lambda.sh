@@ -19,7 +19,9 @@ echo "Copying application code..."
 cp -r "$REPO_ROOT/api/"* "$REPO_ROOT/artifacts/package/"
 
 echo "Creating lambda.zip..."
-zip -r "$REPO_ROOT/artifacts/lambda.zip" "$REPO_ROOT/artifacts/package" > /dev/null
+cd "$REPO_ROOT/artifacts/package"  # Have to cd because zip doesnt support -C on all platforms
+zip -r "$REPO_ROOT/artifacts/lambda.zip" .
+cd -  # Cd back
 
 echo "Cleaning up..."
 rm -rf "$REPO_ROOT/artifacts/package/"

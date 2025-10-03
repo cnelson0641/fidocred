@@ -16,4 +16,9 @@ def root():
     return {"message": "FidoCred Internal API Up and Running!!"}
 
 
+@app.get("/{full_path:path}")
+def catch_all(full_path: str):
+    raise HTTPException(status_code=404, detail=f"Endpoint /{full_path} not found")
+
+
 handler = Mangum(app)

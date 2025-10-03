@@ -1,8 +1,8 @@
 # Lambda IAM Role
 resource "aws_iam_role" "lambda_role" {
-    name = "fidocred-${var.gitlab_env}-lambda-role"
+  name = "fidocred-${var.gitlab_env}-lambda-role"
 
-    assume_role_policy = jsonencode({
+  assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Action    = "sts:AssumeRole"
@@ -19,45 +19,43 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
-	function_name = "fidocred-${var.gitlab_env}-lambdafunc"
-	handler = "main.handler"
-	runtime = "python3.11"
-	role = aws_iam_role.lambda_role.arn
-	filename = "${path.module}/../artifacts/lambda.zip"
-	source_code_hash = filebase64sha256("${path.module}/../artifacts/lambda.zip")
+  function_name    = "fidocred-${var.gitlab_env}-lambdafunc"
+  handler          = "main.handler"
+  runtime          = "python3.11"
+  role             = aws_iam_role.lambda_role.arn
+  filename         = "${path.module}/../artifacts/lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/../artifacts/lambda.zip")
 }
 
 # API Gateway
 resource "aws_apigatewayv2_api" "http_api" {
-	name = "fidocred-${var.gitlab_env}-apigateway"
-	protocol_type = "HTTP"
+  name          = "fidocred-${var.gitlab_env}-apigateway"
+  protocol_type = "HTTP"
+  auto_deploy   = true
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
-	api_id = aws_apigatewayv2_api.http_api.id
-	integration_type = "AWS_PROXY"
-	integration_uri = aws_lambda_function.fastapi_lambda.arn
-	payload_format_version = "2.0"
+  api_id                 = aws_apigatewayv2_api.http_api.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = aws_lambda_function.fastapi_lambda.arn
+  payload_format_version = "2.0"
 }
 
 resource "aws_apigatewayv2_route" "default_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-  auto_deploy = true
 }
 
 resource "aws_apigatewayv2_route" "empty_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-  auto_deploy = true
 }
 
 resource "aws_apigatewayv2_stage" "stage" {
-  api_id      = aws_apigatewayv2_api.http_api.id
-  name = "stage"  # same for all envs, because we need to strip out the stage in the Mangum handler
-  auto_deploy = true
+  api_id = aws_apigatewayv2_api.http_api.id
+  name   = "stage" # same for all envs, because we need to strip out the stage in the Mangum handler
 }
 
 # Lambda permissions

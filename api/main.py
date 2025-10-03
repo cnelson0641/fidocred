@@ -14,7 +14,6 @@ app.include_router(phr.router)
 app.include_router(pr.router)
 app.include_router(pt.router)
 
-@app.get("")
 @app.get("/")
 def root():
     return {"message": "FidoCred Internal API Up and Running!!"}
@@ -22,8 +21,6 @@ def root():
 
 @app.get("/{full_path:path}")
 def catch_all(full_path: str):
-    if full_path in ("", "/"):
-        return root()
     raise HTTPException(status_code=404, detail=f"Endpoint /{full_path} not found")
 
 

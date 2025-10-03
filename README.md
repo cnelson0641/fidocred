@@ -2,8 +2,8 @@
 
 This is the FidoCred internal API, deployed to AWS, and available at the following API endpoints (Swagger UI docs linked):
 
-1. Dev:  TODO
-2. Test: TODO
+1. Dev:  https://w60ru8v9t1.execute-api.us-east-1.amazonaws.com/docs
+2. Test: https://bt0sknaq4i.execute-api.us-east-1.amazonaws.com/docs
 3. PROD: TODO
 
 ## Quick Note on Source Code

@@ -14,6 +14,7 @@ app.include_router(phr.router)
 app.include_router(pr.router)
 app.include_router(pt.router)
 
+@app.get("")
 @app.get("/")
 def root():
     return {"message": "FidoCred Internal API Up and Running!!"}

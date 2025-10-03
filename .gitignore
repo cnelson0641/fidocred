@@ -1,8 +1,7 @@
 # ----------------------
 # Deployment artifacts
 # ----------------------
-lambda.zip
-
+artifacts/*
 
 # COPY PASTED CODE BELOW ##############
 # ----------------------

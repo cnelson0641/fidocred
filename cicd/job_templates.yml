@@ -54,3 +54,22 @@
         - cd infra
         - tofu init $TF_BACKEND_CONFIG
         - tofu apply "../artifacts/${gitlab_env}.tfplan"
+
+
+# Template: Run DB schema and seed scripts
+.db_setup_template:
+    stage: apply
+    image: postgres:15
+    variables:
+        DB_HOST: $DB_HOST
+        DB_PORT: $DB_PORT
+        DB_USER: $DB_USER
+        DB_PASS: $DB_PASS
+        DB_NAME: $DB_NAME
+    script:
+        - echo "Running schema.sql..."
+        - PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -f infra/db/schema.sql
+        - echo "Running _seed_dummy_data.sql..."
+        - PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -f infra/db/_seed_dummy_data.sql
+    rules:
+        - if: '$DB_HOST && $DB_USER && $DB_PASS && $DB_NAME'

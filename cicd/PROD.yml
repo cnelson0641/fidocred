@@ -26,3 +26,8 @@ apply_PROD:
     script:
         - echo "Production releases not supported yet."
         - exit 1
+
+db_setup_PROD:
+    extends:
+        - .PROD_template
+        - .db_setup_template

@@ -1,51 +1,42 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
 from models.resources import User, UserCreate
-from dependencies.db import users
-import uuid
+from dependencies.db import get_db
+from services.db.db_user import get_users, get_user, create_user, update_user, delete_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 # Get all users
 @router.get("/", response_model=List[User])
-def list_users():
-    return users
+async def list_users(db: AsyncSession = Depends(get_db)):
+    return await get_users(db)
 
 # Get a user
 @router.get("/{user_id}", response_model=User)
-def get_user(user_id: str):
-    user = next((u for u in users if u.id == user_id), None)
+async def get_user_route(user_id: str, db: AsyncSession = Depends(get_db)):
+    user = await get_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 # Create a new user
 @router.post("/", response_model=User)
-def create_user(user_in: UserCreate):
-    user = User(
-        id = str(uuid.uuid4()),
-        name = user_in.name,
-        email = user_in.email,
-    )
-    users.append(user)
-    return user
+async def create_user_route(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
+    return await create_user(db, user_in)
 
 # Update a user
 @router.put("/{user_id}", response_model=User)
-def update_user(user_id: str, updated_user: UserCreate):
-    for i, user in enumerate(users):
-        if user.id == user_id:
-            updated_user_with_id = updated_user.model_copy(update={"id": user_id})
-            users[i] = updated_user_with_id
-            return updated_user_with_id
-    raise HTTPException(status_code=404, detail="User not found")
+async def update_user_route(user_id: str, updated_user: UserCreate, db: AsyncSession = Depends(get_db)):
+    user = await update_user(db, user_id, updated_user)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 # Delete a user
 @router.delete("/{user_id}")
-def delete_user(user_id: str):
-    for i, user in enumerate(users):
-        if user.id == user_id:
-            users.pop(i)
-            return {"detail": "User deleted"}
-
-    raise HTTPException(status_code=404, detail="User not found")
+async def delete_user_route(user_id: str, db: AsyncSession = Depends(get_db)):
+    success = await delete_user(db, user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"detail": "User deleted"}

@@ -23,3 +23,8 @@ apply_test:
     extends:
         - .test_template
         - .apply_template
+
+db_setup_test:
+    extends:
+        - .test_template
+        - .db_setup_template

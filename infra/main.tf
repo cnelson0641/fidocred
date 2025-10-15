@@ -74,3 +74,55 @@ resource "aws_lambda_permission" "apigw_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/${aws_apigatewayv2_stage.stage.name}/*/*"
 }
+
+# Aurora Serverless Security Group
+resource "aws_security_group" "db_sg" {
+  name        = "fidocred-poc-db-sg"
+  description = "Allow Aurora PostgreSQL access"
+  vpc_id      = "vpc-xxxxxxxx"  # replace with your VPC ID
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # replace with allowed IPs for POC
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Aurora Serverless v2 Postgres Cluster
+resource "aws_rds_cluster" "aurora_serverless" {
+  cluster_identifier      = "fidocred-aurora"
+  engine                  = "aurora-postgresql"
+  engine_version          = "15.4"
+  database_name           = "fidocred"
+  master_username         = "admin"
+  master_password         = "DogzRule!"
+  skip_final_snapshot     = true
+  storage_encrypted       = true
+  backup_retention_period = 7
+  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+
+  # Serverless v2 scaling
+  engine_mode = "provisioned"
+  scaling_configuration {
+    min_capacity              = 0.5
+    max_capacity              = 1.0
+    auto_pause                = true
+    seconds_until_auto_pause  = 300
+  }
+}
+
+# Aurora Serverless Cluster Instance
+resource "aws_rds_cluster_instance" "aurora_serverless_instance" {
+  cluster_identifier = aws_rds_cluster.aurora_serverless.id
+  engine             = aws_rds_cluster.aurora_serverless.engine
+  engine_version     = aws_rds_cluster.aurora_serverless.engine_version
+  instance_class     = "db.serverless"
+}

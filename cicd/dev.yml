@@ -23,3 +23,8 @@ apply_dev:
     extends:
         - .dev_template
         - .apply_template
+
+db_setup_dev:
+    extends:
+        - .dev_template
+        - .db_setup_template

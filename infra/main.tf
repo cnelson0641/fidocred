@@ -1,3 +1,65 @@
+##################
+# VPC
+##################
+# VPC
+resource "aws_vpc" "fidocred_vpc" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+}
+
+# Public Subnet for Lambda
+resource "aws_subnet" "public_subnet" {
+  vpc_id                  = aws_vpc.fidocred_vpc.id
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  availability_zone       = var.availability_zone
+}
+
+# Private Subnet for DB
+resource "aws_subnet" "private_subnet" {
+  vpc_id            = aws_vpc.fidocred_vpc.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = var.availability_zone
+}
+
+# Internet Gateway for Lambda egress
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.fidocred_vpc.id
+}
+
+# Public Route Table
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.fidocred_vpc.id
+}
+
+# Public Route mapping to public subnet (0.0.0.0/0 to IGW)
+resource "aws_route" "public_internet_route" {
+  route_table_id         = aws_route_table.public_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+}
+
+# Associate public subnet with public route table
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+# Private Route Table
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.fidocred_vpc.id
+}
+
+# Associate private subnet with private route table
+resource "aws_route_table_association" "private_assoc" {
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+##################
+# Lambda Function
+##################
 # Lambda IAM Role
 resource "aws_iam_role" "lambda_role" {
   name = "fidocred-${var.gitlab_env}-lambda-role"
@@ -12,6 +74,7 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+# Attach Lambda perms to IAM role
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
@@ -25,14 +88,37 @@ resource "aws_lambda_function" "fastapi_lambda" {
   role             = aws_iam_role.lambda_role.arn
   filename         = "${path.module}/../artifacts/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/../artifacts/lambda.zip")
+
+  vpc_config {
+    subnet_ids         = [aws_subnet.private_subnet.id]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+  }
 }
 
+# Security group
+resource "aws_security_group" "lambda_sg" {
+  name        = "fidocred-lambda-sg"
+  description = "Lambda security group"
+  vpc_id      = aws_vpc.fidocred_vpc.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+##################
+# API Gateway
+##################
 # API Gateway
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "fidocred-${var.gitlab_env}-apigateway"
   protocol_type = "HTTP"
 }
 
+# Lambda integration
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
@@ -40,18 +126,21 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   payload_format_version = "2.0"
 }
 
+# Default route
 resource "aws_apigatewayv2_route" "default_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+# Empty route
 resource "aws_apigatewayv2_route" "empty_route" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "ANY /"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+# Deployment
 resource "aws_apigatewayv2_deployment" "deployment" {
   api_id = aws_apigatewayv2_api.http_api.id
   depends_on = [
@@ -60,13 +149,14 @@ resource "aws_apigatewayv2_deployment" "deployment" {
   ]
 }
 
+# Default stage (only one)
 resource "aws_apigatewayv2_stage" "stage" {
-  api_id = aws_apigatewayv2_api.http_api.id
-  name   = "$default"
+  api_id        = aws_apigatewayv2_api.http_api.id
+  name          = "$default"
   deployment_id = aws_apigatewayv2_deployment.deployment.id
 }
 
-# Lambda permissions
+# Lambda permissions for API Gateway
 resource "aws_lambda_permission" "apigw_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
@@ -75,17 +165,20 @@ resource "aws_lambda_permission" "apigw_permission" {
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/${aws_apigatewayv2_stage.stage.name}/*/*"
 }
 
+###############################################
+# DB - Aurora Serverlessv2 PostgreSQL Cluster
+###############################################
 # Aurora Serverless Security Group
 resource "aws_security_group" "db_sg" {
-  name        = "fidocred-poc-db-sg"
-  description = "Allow Aurora PostgreSQL access"
-  vpc_id      = "vpc-xxxxxxxx"  # replace with your VPC ID
+  name        = "fidocred-db-sg"
+  description = "Allow Aurora PostgreSQL access only from Lambda"
+  vpc_id      = aws_vpc.fidocred_vpc.id
 
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # replace with allowed IPs for POC
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_groups.lambda_sg.id]
   }
 
   egress {
@@ -102,20 +195,20 @@ resource "aws_rds_cluster" "aurora_serverless" {
   engine                  = "aurora-postgresql"
   engine_version          = "15.4"
   database_name           = "fidocred"
-  master_username         = "admin"
-  master_password         = "DogzRule!"
+  master_username         = var.db_user
+  master_password         = var.db_pass
   skip_final_snapshot     = true
   storage_encrypted       = true
-  backup_retention_period = 7
+  backup_retention_period = 2
   vpc_security_group_ids  = [aws_security_group.db_sg.id]
 
   # Serverless v2 scaling
-  engine_mode = "provisioned"
+  engine_mode = "serverless"
   scaling_configuration {
-    min_capacity              = 0.5
-    max_capacity              = 1.0
-    auto_pause                = true
-    seconds_until_auto_pause  = 300
+    min_capacity             = 0.25
+    max_capacity             = 0.5
+    auto_pause               = true
+    seconds_until_auto_pause = 120
   }
 }
 

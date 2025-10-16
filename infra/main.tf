@@ -205,10 +205,10 @@ resource "aws_rds_cluster" "aurora_serverless" {
   # Serverless v2 scaling
   engine_mode = "serverless"
   scaling_configuration {
-    min_capacity             = 0.25
-    max_capacity             = 0.5
+    min_capacity             = 1
+    max_capacity             = 1
     auto_pause               = true
-    seconds_until_auto_pause = 120
+    seconds_until_auto_pause = 300
   }
 }
 

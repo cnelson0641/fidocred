@@ -39,7 +39,7 @@ plan_app_dev:
     extends:
         - .dev_template
         - .plan_app_template
-    needs: [plan_app_dev]
+    needs: [plan_db_dev]
 
 apply_network_dev:
     extends:

@@ -43,7 +43,7 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
         - tofu validate $TF_APP_VARS
 
 .plan_network_template:
@@ -52,7 +52,7 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG TF_BACKEND_KEY_NETWORK
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
         - tofu plan -out="../../artifacts/${GITLAB_ENV}-network.tfplan" $TF_NETWORK_VARS
     artifacts:
         paths:
@@ -78,7 +78,7 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
         - tofu plan -out="../../artifacts/${GITLAB_ENV}-app.tfplan" $TF_APP_VARS
     artifacts:
         paths:

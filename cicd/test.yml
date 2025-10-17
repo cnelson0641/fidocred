@@ -3,28 +3,3 @@
         name: test
     rules:
         - if: '$CI_COMMIT_BRANCH == "main"'
-
-build_test:
-    extends:
-        - .test_template
-        - .build_template
-
-validate_test:
-    extends:
-        - .test_template
-        - .validate_template
-
-plan_test:
-    extends:
-        - .test_template
-        - .plan_template
-
-apply_test:
-    extends:
-        - .test_template
-        - .apply_template
-
-db_setup_test:
-    extends:
-        - .test_template
-        - .db_setup_template

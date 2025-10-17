@@ -10,7 +10,7 @@
         - '[ -z "$AWS_ACCESS_KEY_ID" ] && echo "Missing AWS_ACCESS_KEY_ID" && exit 1'
         - '[ -z "$AWS_SECRET_ACCESS_KEY" ] && echo "Missing AWS_SECRET_ACCESS_KEY" && exit 1'
         - '[ -z "$AWS_REGION" ] && echo "Missing AWS_REGION" && exit 1'
-        - '[ -z "$gitlab_env" ] && echo "Missing gitlab_env" && exit 1'
+        - '[ -z "$GITLAB_ENV" ] && echo "Missing GITLAB_ENV" && exit 1'
         - apk add --no-cache bash zip
     script:
         - bash util/zip_lambda.sh
@@ -25,8 +25,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu validate
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
+        - tofu validate $TF_NETWORK_VARS
 
 .validate_db_template:
     stage: validate
@@ -34,8 +34,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu validate
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
+        - tofu validate $TF_DB_VARS
 
 .validate_app_template:
     stage: validate
@@ -44,7 +44,7 @@
     script:
         - cd infra/app
         - tofu init $TF_BACKEND_CONFIG
-        - tofu validate
+        - tofu validate $TF_APP_VARS
 
 .plan_network_template:
     stage: plan
@@ -52,11 +52,11 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu plan -out="../../artifacts/${gitlab_env}-network.tfplan" -var="gitlab_env=${gitlab_env}"
+        - tofu init $TF_BACKEND_CONFIG TF_BACKEND_KEY_NETWORK
+        - tofu plan -out="../../artifacts/${GITLAB_ENV}-network.tfplan" $TF_NETWORK_VARS
     artifacts:
         paths:
-            - "artifacts/${gitlab_env}-network.tfplan"
+            - "artifacts/${GITLAB_ENV}-network.tfplan"
         expire_in: 6 hours
 
 .plan_db_template:
@@ -65,11 +65,11 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu plan -out="../../artifacts/${gitlab_env}-db.tfplan" -var="gitlab_env=${gitlab_env}"
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
+        - tofu plan -out="../../artifacts/${GITLAB_ENV}-db.tfplan" $TF_DB_VARS
     artifacts:
         paths:
-            - "artifacts/${gitlab_env}-db.tfplan"
+            - "artifacts/${GITLAB_ENV}-db.tfplan"
         expire_in: 6 hours
 
 .plan_app_template:
@@ -79,10 +79,10 @@
     script:
         - cd infra/app
         - tofu init $TF_BACKEND_CONFIG
-        - tofu plan -out="../../artifacts/${gitlab_env}-app.tfplan" -var="gitlab_env=${gitlab_env}"
+        - tofu plan -out="../../artifacts/${GITLAB_ENV}-app.tfplan" $TF_APP_VARS
     artifacts:
         paths:
-            - "artifacts/${gitlab_env}-app.tfplan"
+            - "artifacts/${GITLAB_ENV}-app.tfplan"
         expire_in: 6 hours
 
 .apply_network_template:
@@ -91,8 +91,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu apply "../../artifacts/${gitlab_env}-network.tfplan"
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
+        - tofu apply "../../artifacts/${GITLAB_ENV}-network.tfplan"
 
 .apply_db_template:
     stage: apply
@@ -100,8 +100,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu apply "../../artifacts/${gitlab_env}-db.tfplan"
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
+        - tofu apply "../../artifacts/${GITLAB_ENV}-db.tfplan"
 
 .apply_app_template:
     stage: apply
@@ -109,8 +109,8 @@
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
         - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG
-        - tofu apply "../../artifacts/${gitlab_env}-app.tfplan"
+        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
+        - tofu apply "../../artifacts/${GITLAB_ENV}-app.tfplan"
 
 
 #TODO

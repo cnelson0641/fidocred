@@ -5,7 +5,7 @@
 resource "aws_security_group" "db_sg" {
   name        = "fidocred-db-sg"
   description = "Allow Aurora PostgreSQL access only from Lambda"
-  vpc_id      = aws_vpc.fidocred_vpc.id
+  vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
 
   ingress {
     from_port       = 5432

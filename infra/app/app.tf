@@ -21,6 +21,20 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# Security group
+resource "aws_security_group" "lambda_sg" {
+  name        = "fidocred-lambda-sg"
+  description = "Lambda security group"
+  vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
   function_name    = "fidocred-${var.gitlab_env}-lambdafunc"
@@ -33,20 +47,6 @@ resource "aws_lambda_function" "fastapi_lambda" {
   vpc_config {
     subnet_ids         = [aws_subnet.private_subnet.id]
     security_group_ids = [aws_security_group.lambda_sg.id]
-  }
-}
-
-# Security group
-resource "aws_security_group" "lambda_sg" {
-  name        = "fidocred-lambda-sg"
-  description = "Lambda security group"
-  vpc_id      = aws_vpc.fidocred_vpc.id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -113,7 +113,7 @@ resource "aws_lambda_permission" "apigw_permission" {
 resource "aws_security_group" "db_sg" {
   name        = "fidocred-db-sg"
   description = "Allow Aurora PostgreSQL access only from Lambda"
-  vpc_id      = aws_vpc.fidocred_vpc.id
+  vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
 
   ingress {
     from_port       = 5432

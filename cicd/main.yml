@@ -29,11 +29,12 @@ variables:
         -var="gitlab_env=${GITLAB_ENV}"
         -var="remote_state_bucket=${TF_BACKEND_BUCKET}
         -var="remote_state_region=${TF_BACKEND_REGION}
-        -var="remote_state_key=network/terraform.tfstate"
+        -var="remote_state_key_network=network/terraform.tfstate"
         -var="remote_state_lock_table=${TF_BACKEND_LOCK_TABLE}
     TF_APP_VARS: >
         -var="gitlab_env=${GITLAB_ENV}"
         -var="remote_state_bucket=${TF_BACKEND_BUCKET}
         -var="remote_state_region=${TF_BACKEND_REGION}
-        -var="remote_state_key=db/terraform.tfstate"
+        -var="remote_state_key_network=network/terraform.tfstate"
+        -var="remote_state_key_db=db/terraform.tfstate"
         -var="remote_state_lock_table=${TF_BACKEND_LOCK_TABLE}

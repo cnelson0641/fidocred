@@ -7,13 +7,6 @@ resource "aws_security_group" "db_sg" {
   description = "Allow Aurora PostgreSQL access only from Lambda"
   vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
 
-  ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.lambda_sg.id]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0

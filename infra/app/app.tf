@@ -3,7 +3,7 @@
 ##################
 # Lambda IAM Role
 resource "aws_iam_role" "lambda_role" {
-  name = "fidocred-${var.gitlab_env}-lambda-role"
+  name = "fidocred-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -37,7 +37,7 @@ resource "aws_security_group" "lambda_sg" {
 
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
-  function_name    = "fidocred-${var.gitlab_env}-lambdafunc"
+  function_name    = "fidocred-lambdafunc"
   handler          = "main.handler"
   runtime          = "python3.11"
   role             = aws_iam_role.lambda_role.arn
@@ -55,7 +55,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
 ##################
 # API Gateway
 resource "aws_apigatewayv2_api" "http_api" {
-  name          = "fidocred-${var.gitlab_env}-apigateway"
+  name          = "fidocred-apigateway"
   protocol_type = "HTTP"
 }
 

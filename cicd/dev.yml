@@ -33,11 +33,13 @@ plan_db_dev:
     extends:
         - .dev_template
         - .plan_db_template
+    needs: [plan_network_dev]
 
 plan_app_dev:
     extends:
         - .dev_template
         - .plan_app_template
+    needs: [plan_app_dev]
 
 apply_network_dev:
     extends:
@@ -48,11 +50,13 @@ apply_db_dev:
     extends:
         - .dev_template
         - .apply_db_template
+    needs: [apply_network_dev]
 
 apply_app_dev:
     extends:
         - .dev_template
         - .apply_app_template
+    needs: [apply_db_dev]
 
 #TODO
 #db_setup_dev:

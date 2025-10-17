@@ -35,6 +35,17 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
+# SG rule to allow lambda sg to talk to db sg
+resource "aws_security_group_rule" "lambda_to_db" {
+  type                        = "egress"
+  from_port                   = 5432
+  to_port                     = 5432
+  protocol                    = "tcp"
+  security_group_id            = aws_security_group.lambda_sg.id
+  destination_security_group_id = data.terraform_remote_state.db.outputs.db_sg_id
+}
+
+
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
   function_name    = "fidocred-lambdafunc"
@@ -45,7 +56,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
   source_code_hash = filebase64sha256("${path.module}/../artifacts/lambda.zip")
 
   vpc_config {
-    subnet_ids         = [aws_subnet.private_subnet.id]
+    subnet_ids         = [data.terraform_remote_state.network.outputs.network.private_subnet_id]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 }

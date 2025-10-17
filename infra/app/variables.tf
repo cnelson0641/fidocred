@@ -11,5 +11,5 @@ variable "db_user" {
 
 variable "db_pass" {
     type = string
-    defualt = "FidoCredDogzRule99%*"
+    default = "FidoCredDogzRule99%*"
 }

@@ -9,22 +9,53 @@ build_dev:
         - .dev_template
         - .build_template
 
-validate_dev:
+validate_network_dev:
     extends:
         - .dev_template
         - .validate_template
 
-plan_dev:
+validate_db_dev:
+    extends:
+        - .dev_template
+        - .validate_template
+
+validate_app_dev:
+    extends:
+        - .dev_template
+        - .validate_template
+
+plan_network_dev:
     extends:
         - .dev_template
         - .plan_template
 
-apply_dev:
+plan_db_dev:
+    extends:
+        - .dev_template
+        - .plan_template
+
+plan_app_dev:
+    extends:
+        - .dev_template
+        - .plan_template
+
+apply_network_dev:
     extends:
         - .dev_template
         - .apply_template
 
-db_setup_dev:
+apply_db_dev:
     extends:
         - .dev_template
-        - .db_setup_template
+        - .apply_template
+
+apply_app_dev:
+    extends:
+        - .dev_template
+        - .apply_template
+
+#TODO
+#db_setup_dev:
+#    extends:
+#        - .dev_template
+#        - .db_setup_template

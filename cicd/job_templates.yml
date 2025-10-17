@@ -19,44 +19,101 @@
             - artifacts/lambda.zip
         expire_in: 1h
 
-.validate_template:
+.validate_network_template:
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra
+        - cd infra/network
         - tofu init $TF_BACKEND_CONFIG
         - tofu validate
-    artifacts:
-        paths:
-            - artifacts/lambda.zip
-        expire_in: 1h
 
+.validate_db_template:
+    stage: validate
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/db
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu validate
 
-.plan_template:
+.validate_app_template:
+    stage: validate
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/app
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu validate
+
+.plan_network_template:
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra
+        - cd infra/network
         - tofu init $TF_BACKEND_CONFIG
-        - tofu plan -out="../artifacts/${gitlab_env}.tfplan" -var="gitlab_env=${gitlab_env}"
+        - tofu plan -out="../../artifacts/${gitlab_env}-network.tfplan" -var="gitlab_env=${gitlab_env}"
     artifacts:
         paths:
-            - "artifacts/${gitlab_env}.tfplan"
+            - "artifacts/${gitlab_env}-network.tfplan"
         expire_in: 6 hours
 
-.apply_template:
+.plan_db_template:
+    stage: plan
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/db
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu plan -out="../../artifacts/${gitlab_env}-db.tfplan" -var="gitlab_env=${gitlab_env}"
+    artifacts:
+        paths:
+            - "artifacts/${gitlab_env}-db.tfplan"
+        expire_in: 6 hours
+
+.plan_app_template:
+    stage: plan
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/app
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu plan -out="../../artifacts/${gitlab_env}-app.tfplan" -var="gitlab_env=${gitlab_env}"
+    artifacts:
+        paths:
+            - "artifacts/${gitlab_env}-app.tfplan"
+        expire_in: 6 hours
+
+.apply_network_template:
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra
+        - cd infra/network
         - tofu init $TF_BACKEND_CONFIG
-        - tofu apply "../artifacts/${gitlab_env}.tfplan"
+        - tofu apply "../../artifacts/${gitlab_env}-network.tfplan"
+
+.apply_db_template:
+    stage: apply
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/db
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu apply "../../artifacts/${gitlab_env}-db.tfplan"
+
+.apply_app_template:
+    stage: apply
+    image:
+        name: oowy/opentofu:1.9.1-alpine3.20
+    script:
+        - cd infra/app
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu apply "../../artifacts/${gitlab_env}-app.tfplan"
 
 
-# Template: Run DB schema and seed scripts
+#TODO
 .db_setup_template:
     stage: apply
     image: postgres:15

@@ -1,6 +1,6 @@
 .setup_env_template:
     before_script:
-        - . ci_env_vars.sh
+        - . cicd/ci_env_vars.sh
 
 .build_template:
     extends:

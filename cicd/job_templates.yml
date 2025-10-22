@@ -1,4 +1,10 @@
+.setup_env_template:
+    before_script:
+        - bash ci_env_vars.sh
+
 .build_template:
+    extends:
+        - .setup_env_template
     stage: build
     image: docker:25.0.3
     services:
@@ -20,6 +26,8 @@
         expire_in: 1h
 
 .validate_network_template:
+    extends:
+        - .setup_env_template
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -29,6 +37,8 @@
         - tofu validate $TF_NETWORK_VARS
 
 .validate_db_template:
+    extends:
+        - .setup_env_template
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -38,6 +48,8 @@
         - tofu validate $TF_DB_VARS
 
 .validate_app_template:
+    extends:
+        - .setup_env_template
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -47,6 +59,8 @@
         - tofu validate $TF_APP_VARS
 
 .plan_network_template:
+    extends:
+        - .setup_env_template
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -61,6 +75,8 @@
         expire_in: 6 hours
 
 .plan_db_template:
+    extends:
+        - .setup_env_template
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -74,6 +90,8 @@
         expire_in: 6 hours
 
 .plan_app_template:
+    extends:
+        - .setup_env_template
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -87,6 +105,8 @@
         expire_in: 6 hours
 
 .apply_network_template:
+    extends:
+        - .setup_env_template
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -96,6 +116,8 @@
         - tofu apply "../../artifacts/${GITLAB_ENV}-network.tfplan"
 
 .apply_db_template:
+    extends:
+        - .setup_env_template
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -105,6 +127,8 @@
         - tofu apply "../../artifacts/${GITLAB_ENV}-db.tfplan"
 
 .apply_app_template:
+    extends:
+        - .setup_env_template
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
@@ -116,6 +140,8 @@
 
 #TODO
 .db_setup_template:
+    extends:
+        - .setup_env_template
     stage: apply
     image: postgres:15
     variables:

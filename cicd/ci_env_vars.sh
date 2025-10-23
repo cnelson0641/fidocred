@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GitLab environment
-export GITLAB_ENV="$CI_ENVIRONMENT_NAME"
+export GITLAB_ENV=${CI_ENVIRONMENT_NAME}
 
 # Terraform backend
 export TF_BACKEND_BUCKET="fidocred-${GITLAB_ENV}-tfstate"

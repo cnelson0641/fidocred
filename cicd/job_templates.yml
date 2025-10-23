@@ -1,6 +1,8 @@
 .setup_env_template:
     before_script:
         - . cicd/ci_env_vars.sh
+        - echo $GITLAB_ENV
+        - echo $CI_ENVIRONMENT_NAME
 
 .build_template:
     extends:

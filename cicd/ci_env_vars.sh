@@ -10,4 +10,5 @@ export TF_BACKEND_LOCK_TABLE="fidocred-${GITLAB_ENV}-locks"
 export TF_BACKEND_CONFIG="-backend-config=bucket=${TF_BACKEND_BUCKET} \
 	-backend-config=region=${TF_BACKEND_REGION} \
 	-backend-config=dynamodb_table=${TF_BACKEND_LOCK_TABLE} \
-	-backend-config=encrypt=true"
+	-backend-config=encrypt=true \
+    -backend-config=key=${GITLAB_ENV}-terraform.tfstate"

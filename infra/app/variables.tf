@@ -1,15 +1,25 @@
-variable "remote_state_bucket" {}
-variable "remote_state_key_network" {}
-variable "remote_state_key_db" {}
-variable "remote_state_region" {}
-variable "remote_state_lock_table" {}
+variable "vpc_id" {
+  type = string
+}
+
+variable "private_subnet_id" {
+  type = string
+}
+
+variable "public_subnet_id" {
+  type = string
+}
+
+variable "db_sg_id" {
+  type = string
+}
 
 variable "db_user" {
-    type = string
-    default = "fc-admin"
+  type    = string
+  default = "fc-admin"
 }
 
 variable "db_pass" {
-    type = string
-    default = "FidoCredDogzRule99%*"
+  type    = string
+  default = "FidoCredDogzRule99%*"
 }

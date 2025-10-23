@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 resource "aws_security_group" "lambda_sg" {
   name        = "fidocred-lambda-sg"
   description = "Lambda security group"
-  vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
+  vpc_id      = var.vpc_id
 
   egress {
     from_port   = 0
@@ -41,8 +41,8 @@ resource "aws_security_group_rule" "db_allow_lambda" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id         = data.terraform_remote_state.db.outputs.db_sg_id
-  source_security_group_id  = aws_security_group.lambda_sg.id
+  security_group_id        = var.db_sg_id
+  source_security_group_id = aws_security_group.lambda_sg.id
 }
 
 # Lambda Function
@@ -55,7 +55,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
   source_code_hash = filebase64sha256("${path.module}/../../artifacts/lambda.zip")
 
   vpc_config {
-    subnet_ids         = [data.terraform_remote_state.network.outputs.network.private_subnet_id]
+    subnet_ids         = [var.private_subnet_id]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 }
@@ -123,7 +123,7 @@ resource "aws_lambda_permission" "apigw_permission" {
 resource "aws_security_group" "db_sg" {
   name        = "fidocred-db-sg"
   description = "Allow Aurora PostgreSQL access only from Lambda"
-  vpc_id      = data.terraform_remote_state.network.outputs.network.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port       = 5432

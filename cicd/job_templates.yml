@@ -25,118 +25,42 @@
             - artifacts/lambda.zip
         expire_in: 1h
 
-.validate_network_template:
+.validate_template:
     extends:
         - .setup_env_template
     stage: validate
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
-        - tofu validate $TF_NETWORK_VARS
+        - cd infra
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu validate
 
-.validate_db_template:
-    extends:
-        - .setup_env_template
-    stage: validate
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
-        - tofu validate $TF_DB_VARS
-
-.validate_app_template:
-    extends:
-        - .setup_env_template
-    stage: validate
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
-        - tofu validate $TF_APP_VARS
-
-.plan_network_template:
+.plan_template:
     extends:
         - .setup_env_template
     stage: plan
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
-        - echo ${GITLAB_ENV} ${CI_ENVIRONMENT_NAME}
-        - tofu plan -out="../../artifacts/${GITLAB_ENV}-network.tfplan" $TF_NETWORK_VARS
+        - cd infra
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu plan -out="../artifacts/${GITLAB_ENV}.tfplan"
     artifacts:
         paths:
-            - "artifacts/${GITLAB_ENV}-network.tfplan"
+            - "artifacts/${GITLAB_ENV}.tfplan"
         expire_in: 6 hours
 
-.plan_db_template:
-    extends:
-        - .setup_env_template
-    stage: plan
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
-        - tofu plan -out="../../artifacts/${GITLAB_ENV}-db.tfplan" $TF_DB_VARS
-    artifacts:
-        paths:
-            - "artifacts/${GITLAB_ENV}-db.tfplan"
-        expire_in: 6 hours
-
-.plan_app_template:
-    extends:
-        - .setup_env_template
-    stage: plan
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
-        - tofu plan -out="../../artifacts/${GITLAB_ENV}-app.tfplan" $TF_APP_VARS
-    artifacts:
-        paths:
-            - "artifacts/${GITLAB_ENV}-app.tfplan"
-        expire_in: 6 hours
-
-.apply_network_template:
+.apply_template:
     extends:
         - .setup_env_template
     stage: apply
     image:
         name: oowy/opentofu:1.9.1-alpine3.20
     script:
-        - cd infra/network
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_NETWORK
-        - tofu apply "../../artifacts/${GITLAB_ENV}-network.tfplan"
-
-.apply_db_template:
-    extends:
-        - .setup_env_template
-    stage: apply
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/db
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_DB
-        - tofu apply "../../artifacts/${GITLAB_ENV}-db.tfplan"
-
-.apply_app_template:
-    extends:
-        - .setup_env_template
-    stage: apply
-    image:
-        name: oowy/opentofu:1.9.1-alpine3.20
-    script:
-        - cd infra/app
-        - tofu init $TF_BACKEND_CONFIG $TF_BACKEND_KEY_APP
-        - tofu apply "../../artifacts/${GITLAB_ENV}-app.tfplan"
-
+        - cd infra
+        - tofu init $TF_BACKEND_CONFIG
+        - tofu apply "../artifacts/${GITLAB_ENV}.tfplan"
 
 #TODO
 .db_setup_template:

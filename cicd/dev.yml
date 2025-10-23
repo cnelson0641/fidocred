@@ -9,54 +9,20 @@ build_dev:
         - .dev_template
         - .build_template
 
-validate_network_dev:
+validate_dev:
     extends:
         - .dev_template
-        - .validate_network_template
+        - .validate_template
 
-validate_db_dev:
+plan_dev:
     extends:
         - .dev_template
-        - .validate_db_template
+        - .plan_template
 
-validate_app_dev:
+apply_dev:
     extends:
         - .dev_template
-        - .validate_app_template
-
-plan_network_dev:
-    extends:
-        - .dev_template
-        - .plan_network_template
-
-plan_db_dev:
-    extends:
-        - .dev_template
-        - .plan_db_template
-    needs: [plan_network_dev]
-
-plan_app_dev:
-    extends:
-        - .dev_template
-        - .plan_app_template
-    needs: [plan_db_dev]
-
-apply_network_dev:
-    extends:
-        - .dev_template
-        - .apply_network_template
-
-apply_db_dev:
-    extends:
-        - .dev_template
-        - .apply_db_template
-    needs: [apply_network_dev]
-
-apply_app_dev:
-    extends:
-        - .dev_template
-        - .apply_app_template
-    needs: [apply_db_dev]
+        - .apply_template
 
 #TODO
 #db_setup_dev:

@@ -1,8 +1,6 @@
 .setup_env_template:
     before_script:
         - . cicd/ci_env_vars.sh
-        - echo $GITLAB_ENV
-        - echo $CI_ENVIRONMENT_NAME
 
 .build_template:
     extends:
@@ -50,7 +48,7 @@
         - tofu plan -out="../artifacts/${GITLAB_ENV}.tfplan"
     artifacts:
         paths:
-            - "artifacts/${GITLAB_ENV}.tfplan"
+            - "artifacts/*.tfplan"
         expire_in: 6 hours
 
 .apply_template:

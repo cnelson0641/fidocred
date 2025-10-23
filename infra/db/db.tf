@@ -29,7 +29,7 @@ resource "aws_rds_cluster" "aurora_serverless" {
   vpc_security_group_ids  = [aws_security_group.db_sg.id]
 
   # Serverless v2 scaling
-  engine_mode = "serverless"
+  engine_mode = "provisioned"
   scaling_configuration {
     min_capacity             = 1
     max_capacity             = 1

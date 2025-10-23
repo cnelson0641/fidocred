@@ -48,7 +48,7 @@
         - tofu plan -out="../artifacts/${GITLAB_ENV}.tfplan"
     artifacts:
         paths:
-            - "../artifacts/${GITLAB_ENV}.tfplan"
+            - "artifacts/${GITLAB_ENV}.tfplan"
         expire_in: 6 hours
 
 .apply_template:
@@ -60,7 +60,7 @@
     script:
         - cd infra
         - tofu init $TF_BACKEND_CONFIG
-        - tofu apply "../artifacts/${GITLAB_ENV}.tfplan"
+        - tofu apply "artifacts/${GITLAB_ENV}.tfplan"
 
 #TODO
 .db_setup_template:

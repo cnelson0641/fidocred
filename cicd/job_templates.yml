@@ -48,7 +48,7 @@
         - tofu plan -out="../artifacts/${GITLAB_ENV}.tfplan"
     artifacts:
         paths:
-            - "artifacts/${GITLAB_ENV}.tfplan"
+            - "../artifacts/${GITLAB_ENV}.tfplan"
         expire_in: 6 hours
 
 .apply_template:

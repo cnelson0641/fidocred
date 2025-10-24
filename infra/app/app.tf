@@ -55,7 +55,7 @@ resource "aws_lambda_function" "fastapi_lambda" {
   source_code_hash = filebase64sha256("${path.module}/../../artifacts/lambda.zip")
 
   vpc_config {
-    subnet_ids         = [var.private_subnet_id]
+    subnet_ids         = [var.private_subnet_id_1]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 }

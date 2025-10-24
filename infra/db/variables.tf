@@ -12,7 +12,7 @@ variable "private_subnet_id_2" {
 
 variable "db_user" {
   type    = string
-  default = "fc-admin"
+  default = "fc_admin"
 }
 
 variable "db_pass" {

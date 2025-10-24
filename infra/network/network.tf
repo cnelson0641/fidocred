@@ -25,7 +25,7 @@ resource "aws_subnet" "private_subnet_1" {
 # Private Subnet 2 for DB
 resource "aws_subnet" "private_subnet_2" {
   vpc_id            = aws_vpc.fidocred_vpc.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.3.0/24"
   availability_zone = "us-east-1b"  # diff from first for HA Aurora
 }
 

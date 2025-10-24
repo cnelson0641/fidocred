@@ -15,6 +15,13 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
+# DB Subnet Group
+resource "aws_db_subnet_group" "aurora_subnet_group" {
+  name        = "fidocred-aurora-subnet-group"
+  description = "Aurora subnet group"
+  subnet_ids  = [var.private_subnet_id]
+}
+
 # Aurora Serverless v2 Postgres Cluster
 resource "aws_rds_cluster" "aurora_serverless" {
   cluster_identifier      = "fidocred-aurora"
@@ -27,6 +34,7 @@ resource "aws_rds_cluster" "aurora_serverless" {
   storage_encrypted       = true
   backup_retention_period = 2
   vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  db_subnet_group_name    = aws_db_subnet_group.aurora_subnet_group.name
 
   # Serverless v2 scaling
   engine_mode = "provisioned"

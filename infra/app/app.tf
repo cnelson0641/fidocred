@@ -16,9 +16,15 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 # Attach Lambda perms to IAM role
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# Attach Lambda perms to IAM role
+resource "aws_iam_role_policy_attachment" "lambda_basic_logging_network" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 # Security group
@@ -114,59 +120,4 @@ resource "aws_lambda_permission" "apigw_permission" {
   function_name = aws_lambda_function.fastapi_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/${aws_apigatewayv2_stage.stage.name}/*/*"
-}
-
-###############################################
-# DB - Aurora Serverlessv2 PostgreSQL Cluster
-###############################################
-# Aurora Serverless Security Group
-resource "aws_security_group" "db_sg" {
-  name        = "fidocred-db-sg"
-  description = "Allow Aurora PostgreSQL access only from Lambda"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.lambda_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Aurora Serverless v2 Postgres Cluster
-resource "aws_rds_cluster" "aurora_serverless" {
-  cluster_identifier      = "fidocred-aurora"
-  engine                  = "aurora-postgresql"
-  engine_version          = "15.4"
-  database_name           = "fidocred"
-  master_username         = var.db_user
-  master_password         = var.db_pass
-  skip_final_snapshot     = true
-  storage_encrypted       = true
-  backup_retention_period = 2
-  vpc_security_group_ids  = [aws_security_group.db_sg.id]
-
-  # Serverless v2 scaling
-  engine_mode = "serverless"
-  scaling_configuration {
-    min_capacity             = 1
-    max_capacity             = 1
-    auto_pause               = true
-    seconds_until_auto_pause = 300
-  }
-}
-
-# Aurora Serverless Cluster Instance
-resource "aws_rds_cluster_instance" "aurora_serverless_instance" {
-  cluster_identifier = aws_rds_cluster.aurora_serverless.id
-  engine             = aws_rds_cluster.aurora_serverless.engine
-  engine_version     = aws_rds_cluster.aurora_serverless.engine_version
-  instance_class     = "db.serverless"
 }

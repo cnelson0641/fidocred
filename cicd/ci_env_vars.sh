@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 
 # GitLab environment
 export GITLAB_ENV=${CI_ENVIRONMENT_NAME}

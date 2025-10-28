@@ -2,11 +2,7 @@ variable "vpc_id" {
   type = string
 }
 
-variable "private_subnet_id_1" {
-  type = string
-}
-
-variable "private_subnet_id_2" {
+variable "private_subnet_id" {
   type = string
 }
 

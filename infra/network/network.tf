@@ -16,17 +16,10 @@ resource "aws_subnet" "public_subnet" {
 }
 
 # Private Subnet 1 for DB and app
-resource "aws_subnet" "private_subnet_1" {
+resource "aws_subnet" "private_subnet" {
   vpc_id            = aws_vpc.fidocred_vpc.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1a"
-}
-
-# Private Subnet 2 for DB
-resource "aws_subnet" "private_subnet_2" {
-  vpc_id            = aws_vpc.fidocred_vpc.id
-  cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1b"  # diff from first for HA Aurora
 }
 
 # Internet Gateway for Lambda egress
@@ -59,6 +52,6 @@ resource "aws_route_table" "private_rt" {
 
 # Associate private subnet with private route table
 resource "aws_route_table_association" "private_assoc" {
-  subnet_id      = aws_subnet.private_subnet_1.id
+  subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_rt.id
 }

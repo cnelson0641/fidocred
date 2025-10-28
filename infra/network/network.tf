@@ -22,6 +22,13 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = "us-east-1a"
 }
 
+# Private Subnet 2 for DB and app
+resource "aws_subnet" "private_subnet2" {
+  vpc_id            = aws_vpc.fidocred_vpc.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "us-east-1a"
+}
+
 # Internet Gateway for Lambda egress
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.fidocred_vpc.id
@@ -53,5 +60,11 @@ resource "aws_route_table" "private_rt" {
 # Associate private subnet with private route table
 resource "aws_route_table_association" "private_assoc" {
   subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+# Associate private subnet with private route table
+resource "aws_route_table_association" "private_assoc2" {
+  subnet_id      = aws_subnet.private_subnet2.id
   route_table_id = aws_route_table.private_rt.id
 }

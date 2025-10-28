@@ -19,7 +19,7 @@ resource "aws_security_group" "db_sg" {
 resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "fidocred-db-subnet-group"
   description = "DB subnet group"
-  subnet_ids  = [var.private_subnet_id]
+  subnet_ids  = [var.private_subnet_id,var.private_subnet_id2]
 }
 
 # RDS MySQL DB

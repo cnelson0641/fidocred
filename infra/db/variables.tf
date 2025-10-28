@@ -6,6 +6,10 @@ variable "private_subnet_id" {
   type = string
 }
 
+variable "private_subnet_id2" {
+  type = string
+}
+
 variable "db_user" {
   type    = string
   default = "fc_admin"

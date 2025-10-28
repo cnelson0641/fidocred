@@ -2,6 +2,7 @@
 # Deployment artifacts
 # ----------------------
 artifacts/*
+tmp/*
 
 # COPY PASTED CODE BELOW ##############
 # ----------------------
@@ -76,6 +77,7 @@ docker-compose.override.yml
 # AWS / Terraform / Infra
 # ----------------------
 .terraform/
+.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfvars

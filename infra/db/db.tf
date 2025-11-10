@@ -19,22 +19,28 @@ resource "aws_security_group" "db_sg" {
 resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "fidocred-db-subnet-group"
   description = "DB subnet group"
-  subnet_ids  = [var.private_subnet_id,var.private_subnet_id2]
+  subnet_ids  = [var.private_subnet_id, var.private_subnet_id2]
 }
 
 # RDS MySQL DB
 resource "aws_db_instance" "postgre-db" {
-	identifier = "fidocred-rds-postgre-db"
-    db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
-    engine = "postgres"
-    engine_version = "16.9"
-    instance_class = "db.t3.micro"
-    storage_type = "gp3"
-    allocated_storage = 1
-    max_allocated_storage = 5
-    username = var.db_user
-    password = var.db_pass
-    skip_final_snapshot = true
-    publicly_accessible = false
-    backup_retention_period = 0
+  identifier              = "fidocred-rds-postgre-db"
+  # Networking
+  db_subnet_group_name    = aws_db_subnet_group.db_subnet_group.name
+  multi_az                = false
+  availability_zone       = "us-east-1a"
+  # DB Engine
+  engine                  = "postgres"
+  engine_version          = "16.9"
+  # Creds
+  username                = var.db_user
+  password                = var.db_pass
+  # CPU, Storage, Other
+  instance_class          = "db.t4g.micro"
+  storage_type            = "gp3"
+  allocated_storage       = 20
+  max_allocated_storage   = 20
+  skip_final_snapshot     = true
+  publicly_accessible     = false
+  backup_retention_period = 0
 }

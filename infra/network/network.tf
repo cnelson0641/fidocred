@@ -26,7 +26,7 @@ resource "aws_subnet" "private_subnet" {
 resource "aws_subnet" "private_subnet2" {
   vpc_id            = aws_vpc.fidocred_vpc.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1b"
 }
 
 # Internet Gateway for Lambda egress

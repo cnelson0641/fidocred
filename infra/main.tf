@@ -7,8 +7,8 @@ module "db" {
   depends_on = [module.network]
 
   # Network
-  vpc_id            = module.network.vpc_id
-  private_subnet_id = module.network.private_subnet_id
+  vpc_id             = module.network.vpc_id
+  private_subnet_id  = module.network.private_subnet_id
   private_subnet_id2 = module.network.private_subnet_id2
 }
 
@@ -20,7 +20,6 @@ module "app" {
   vpc_id            = module.network.vpc_id
   public_subnet_id  = module.network.public_subnet_id
   private_subnet_id = module.network.private_subnet_id
-  private_subnet_id2 = module.network.private_subnet_id2
 
   # DB
   db_sg_id = module.db.db_sg_id

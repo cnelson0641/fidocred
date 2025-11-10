@@ -19,7 +19,7 @@
         - '[ -z "$GITLAB_ENV" ] && echo "Missing GITLAB_ENV" && exit 1'
         - apk add --no-cache bash zip
     script:
-        - bash util/zip_lambda.sh
+        - bash util/build_zip_lambda.sh
     artifacts:
         paths:
             - artifacts/lambda.zip

@@ -1,60 +1,62 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
-from datetime import datetime
+from sqlmodel import SQLModel, Field
+import uuid
 
 #################
 # Main Models
 #################
-class User(BaseModel):
-    id: str
+class UserBase(SQLModel):
     name: str
     email: str
 
-class UserCreate(BaseModel):
-    name: str
-    email: str
+class User(UserBase, table=True):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
 
-class Pet(BaseModel):
+class UserCreate(UserBase):
+    pass
+
+#TODO create base class
+class Pet(SQLModel):
     id: str
     name: str
     species: str
     breed: Optional[str] = None
     owner_ids: List[str] = Field(default_factory=list)
 
-class PetCreate(BaseModel):
+class PetCreate(SQLModel):
     name: str
     species: str
     breed: Optional[str] = None
     owner_ids: List[str] = Field(default_factory=list)
 
-class PetDocument(BaseModel):
+class PetDocument(SQLModel):
     id: str
     pet_id: str
     filename: str
     filedata: str
 
-class PetDocumentCreate(BaseModel):
+class PetDocumentCreate(SQLModel):
     pet_id: str
     filename: str
     filedata: str
 
-class PetHealthRecord(BaseModel):
+class PetHealthRecord(SQLModel):
     id: str
     pdoc_id: str
     structured_data: dict
 
-class PetReport(BaseModel):
+class PetReport(SQLModel):
     id: str
     phr_id: str
 
-class PetReportCreate(BaseModel):
+class PetReportCreate(SQLModel):
     phr_id: str
 
-class PetTimeline(BaseModel):
+class PetTimeline(SQLModel):
     id: str
     summary: str
     report_ids: List[str] = Field(default_factory=list)
 
-class PetTimelineCreate(BaseModel):
+class PetTimelineCreate(SQLModel):
     summary: str
     report_ids: List[str] = Field(default_factory=list)

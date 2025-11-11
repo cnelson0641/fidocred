@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
 from models.resources import Pet, PetCreate
-from dependencies.db import pets
-import uuid
+from db.db import get_db
+import services.pet as pet_service
 
 router = APIRouter(prefix="/pets", tags=["pets"])
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from models.resources import PetHealthRecord
+from models import PetHealthRecord
 from dependencies.db import phrs
 import uuid
 

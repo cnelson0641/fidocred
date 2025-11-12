@@ -1,14 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from mangum import Mangum
 #from api.routers import user, pet, pdoc, phr, pr, pt
-from api.routers import user
+from api.routers import user, pet
 from db.db import engine
 from sqlmodel import SQLModel
 
 app = FastAPI(title="FidoCred Internal API")
 
 app.include_router(user.router)
-#app.include_router(pet.router)
+app.include_router(pet.router)
 #app.include_router(pdoc.router)
 #app.include_router(phr.router)
 #app.include_router(pr.router)

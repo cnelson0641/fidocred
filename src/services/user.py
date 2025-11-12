@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlmodel import select as sql_select
-from models.resources import User, UserCreate
+from models import User, UserCreate
 
 #################
 # User Service
@@ -18,10 +18,10 @@ async def get_user(db: AsyncSession, user_id: str) -> User | None:
 
 
 async def create_user(db: AsyncSession, user_in: UserCreate) -> User:
-    user = User(**user_in.dict())  # UUID id generated automatically
+    user = User(**user_in.dict())
     db.add(user)
     await db.commit()
-    await db.refresh(user)  # refresh to get any defaults or DB-generated fields
+    await db.refresh(user)
     return user
 
 

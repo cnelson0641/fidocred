@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from models.resources import PetTimeline, PetTimelineCreate
+from models import PetTimeline, PetTimelineCreate
 from dependencies.db import pts
 import uuid
 

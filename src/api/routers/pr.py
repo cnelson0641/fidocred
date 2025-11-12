@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from models.resources import PetReport, PetReportCreate
+from models import PetReport, PetReportCreate
 from dependencies.db import prs
 import uuid
 

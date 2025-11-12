@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.resources import Pet, PetCreate
+
+from models import Pet, PetCreate
 from db.db import get_db
 import services.pet as pet_service
 
@@ -9,46 +10,35 @@ router = APIRouter(prefix="/pets", tags=["pets"])
 
 # Get all pets
 @router.get("/", response_model=List[Pet])
-def get_pets():
-    return pets
+async def list_pets(db: AsyncSession = Depends(get_db)):
+    return await pet_service.get_pets(db)
 
-# Get a single pet by ID
+# Get a pet
 @router.get("/{pet_id}", response_model=Pet)
-def get_pet(pet_id: str):
-    pet = next((p for p in pets if p.id == pet_id), None)
+async def get_pet_route(pet_id: str, db: AsyncSession = Depends(get_db)):
+    pet = await pet_service.get_pet(db, pet_id)
     if not pet:
         raise HTTPException(status_code=404, detail="Pet not found")
     return pet
 
-# Create a new pet
+# Create pet
 @router.post("/", response_model=Pet)
-def create_pet(pet_in: PetCreate):
-    pet = Pet(
-        id=str(uuid.uuid4()),  # server-generated
-        name=pet_in.name,
-        species=pet_in.species,
-        breed=pet_in.breed,
-        owner_ids=pet_in.owner_ids,
-    )
-    pets.append(pet)
+async def create_pet_route(pet_in: PetCreate, db: AsyncSession = Depends(get_db)):
+    return await pet_service.create_pet(db, pet_in)
+
+# Update pet
+@router.put("/{pet_id}", response_model=Pet)
+async def update_pet_route(pet_id: str,updated_pet: PetCreate,db: AsyncSession = Depends(get_db)):
+    pet = await pet_service.update_pet(db, pet_id, updated_pet)
+    if not pet:
+        raise HTTPException(status_code=404, detail="Pet not found")
     return pet
 
-# Update a pet
-@router.put("/{pet_id}", response_model=Pet)
-def update_pet(pet_id: str, updated_pet: PetCreate):
-    for i, pet in enumerate(pets):
-        if pet.id == pet_id:
-            updated_pet_with_id = updated_pet.model_copy(update={"id": pet_id})
-            pets[i] = updated_pet_with_id
-            return updated_pet_with_id
-    raise HTTPException(status_code=404, detail="Pet not found")
-
-# Delete a pet
+# Delete pet
 @router.delete("/{pet_id}")
-def delete_pet(pet_id: str):
-    for i, pet in enumerate(pets):
-        if pet.id == pet_id:
-            pets.pop(i)
-            return {"detail": "Pet deleted"}
-    raise HTTPException(status_code=404, detail="Pet not found")
+async def delete_pet_route(pet_id: str, db: AsyncSession = Depends(get_db)):
+    success = await pet_service.delete_pet(db, pet_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Pet not found")
+    return {"detail": "Pet deleted"}
 

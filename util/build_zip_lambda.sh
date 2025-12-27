@@ -16,7 +16,7 @@ docker run --rm -v "$REPO_ROOT":/repo python:3.11-bullseye bash -c "
 "
 
 echo "Copying application code..."
-cp -r "$REPO_ROOT/src/api/"* "$REPO_ROOT/artifacts/package/"
+cp -r "$REPO_ROOT/src/api" "$REPO_ROOT/artifacts/package/"
 
 echo "Creating lambda.zip..."
 cd "$REPO_ROOT/artifacts/package"  # Have to cd because zip doesnt support -C on all platforms

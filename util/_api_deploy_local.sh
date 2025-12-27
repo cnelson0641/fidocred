@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-cd "$(dirname "$0")/../src"
+cd "$(dirname "${BASH_SOURCE[0]}")/../src"
 
 python3 -m venv .venv
 source .venv/bin/activate

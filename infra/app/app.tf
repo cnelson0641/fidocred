@@ -54,7 +54,7 @@ resource "aws_security_group_rule" "db_allow_lambda" {
 # Lambda Function
 resource "aws_lambda_function" "fastapi_lambda" {
   function_name    = "fidocred-lambdafunc"
-  handler          = "main.handler"
+  handler          = "api.main.handler"
   runtime          = "python3.11"
   role             = aws_iam_role.lambda_role.arn
   filename         = "${path.module}/../../artifacts/lambda.zip"

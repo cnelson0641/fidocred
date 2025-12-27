@@ -12,11 +12,11 @@ rm -rf "$REPO_ROOT/artifacts/package/"
 echo "Installing dependencies in Lambda-compatible Docker..."
 docker run --rm -v "$REPO_ROOT":/repo python:3.11-bullseye bash -c "
     pip install --upgrade pip
-    pip install -r /repo/api/requirements.txt -t /repo/artifacts/package
+    pip install -r /repo/src/requirements.txt -t /repo/artifacts/package
 "
 
 echo "Copying application code..."
-cp -r "$REPO_ROOT/api/"* "$REPO_ROOT/artifacts/package/"
+cp -r "$REPO_ROOT/src/api/"* "$REPO_ROOT/artifacts/package/"
 
 echo "Creating lambda.zip..."
 cd "$REPO_ROOT/artifacts/package"  # Have to cd because zip doesnt support -C on all platforms
